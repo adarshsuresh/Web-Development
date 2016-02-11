@@ -1,0 +1,82 @@
+.serachdiv {
+	padding: 1%;
+background-color: rgba(0, 0, 0, 0.3);
+}
+body{background: url('http://cs-server.usc.edu:45678/hw/hw8/images/bg.jpg') no-repeat  center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;}
+
+.form-group{
+	padding-left: 3px;
+	padding-right:3px;
+}
+
+.form-inline .form-control{
+	width:100%;
+}
+.text-muted{
+	color: white;
+}
+
+.rightnowdiv
+{
+	background-color:#FF9999;
+	padding:10px 10px 10px;
+}
+#rightnowinfo{
+	padding: 0;
+}
+#rightnowimage
+{
+	height:120px;
+	width:140px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#rightnowdesc
+{
+	font-weight: bold;
+}
+#rightnowmap{
+display: block;
+padding: 0;
+}
+#mymap{
+height: 467px;
+width: 100%;
+}
+#next24table{
+	text-align:center;
+	table-layout:fixed;
+}
+#next7{
+	background-color: black;
+}
+.daydivs{
+	text-align:center;
+	text-size:20px;
+	color:white;
+	border-radius:10px;
+	margin:5px;
+	padding:5px;
+}
+.daysimg{
+	width:50px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.row{
+	margin:0px;
+}
+.daymodalimage
+{
+	height:140px;
+	width:140px;
+	margin-left:auto;
+	margin-right:auto;
+}
+#fbimage{
+	cursor: pointer;
+}

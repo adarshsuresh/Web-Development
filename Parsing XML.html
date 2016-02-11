@@ -1,0 +1,121 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+form {
+    margin-top: 200px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<script>
+    var xmlDoc;
+    var str;
+    function createHtml(xmlDoc){
+         
+    var dheader=xmlDoc.getElementsByTagName("Data"); 
+    var row=xmlDoc.getElementsByTagName("Row");
+    if(row.length==0)
+    {
+        str=null;
+        alert("Xml file contain no cable compant details.");
+        return ;
+    }
+    str="<html><head><title>XML Parse Result</title></head><body>";
+    str+="<table border='2'><tr>";
+    for (i=0;i<dheader.length;i++)
+    {
+      str+="<th>"+dheader[i].childNodes[0].nodeValue+"</th>";
+    }
+    str+="</tr>"
+   
+    for (i=0;i<row.length;i++)
+    { 
+        var rowNodeList=row.item(i).childNodes;
+        str+="<tr>";
+        for(j=0;j<rowNodeList.length;j++)
+        {
+            if(rowNodeList.item(j).nodeType==1)
+            {
+                if(rowNodeList.item(j).nodeName=="Feeds"){
+                    str+="<td><ul>";
+                    var feedsNodeList=rowNodeList.item(j).childNodes;
+                    for (k=0;k<feedsNodeList.length;k++){
+                         if(feedsNodeList.item(k).nodeType==1){
+                            if(feedsNodeList.item(k).firstChild!=null)
+                             str+="<li>"+feedsNodeList.item(k).firstChild.nodeValue+"</li>";
+                         }
+                    }
+                    str+="</ul></td>";
+                }
+                else if(rowNodeList.item(j).nodeName=="HomePage"){
+                    if(rowNodeList.item(j).firstChild!=null)
+                    {
+                     var hrefval=rowNodeList.item(j).firstChild.nodeValue;
+                     str+="<td><a href=\""+hrefval+"\">"+hrefval+"</a></td>";
+                    }
+                    else
+                    str+="<td></td>"
+                }
+                else if(rowNodeList.item(j).nodeName=="Logo"){
+                    if(rowNodeList.item(j).firstChild!=null)
+                    str+="<td><img src=\""+rowNodeList.item(j).firstChild.nodeValue+"\"></td>";
+                    else
+                    str+="<td></td>"
+                }
+                else{
+                    if(rowNodeList.item(j).firstChild!=null)
+                    str+="<td>"+rowNodeList.item(j).firstChild.nodeValue+"</td>";
+                    else
+                    str+="<td></td>"
+                }
+            }
+        }
+        str+="</tr>"; 
+    }
+    str+="</table>";
+    str+="</body></html>";
+    }
+    function popWindow(myform){
+    var url=myform.xmlfile.value;
+        if(!url.match(/\S/))
+        {alert("Text box is empty.Please enter a valid file name.");
+         return false;
+        }
+    function loadXML(url) {
+        if (window.XMLHttpRequest){xmlhttp=new XMLHttpRequest();}
+        else{xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");}
+         xmlhttp.open("GET",url,false); 
+         try{xmlhttp.send();}
+         catch(e){return null;}
+         xmlDoc=xmlhttp.responseXML;
+        return xmlDoc;
+        }
+    xmlDoc=loadXML(url);
+    if(xmlDoc==null){
+        alert(url+" - Xml file does not exist or cannot be fetched.");
+    }
+    else if (xmlDoc.documentElement.nodeName == "parsererror"){
+        errStr = xmlDoc.documentElement.childNodes[0].nodeValue;
+        alert(errStr);
+    }
+    else{
+        createHtml(xmlDoc);
+        if(str!=null){
+            var hWin = window.open("", "_blank", "height=600,width=800,scrollbars=1,resizable=1");
+            hWin.document.write(str);
+        }
+    }
+    return false;
+   }
+</script>
+<div>
+<form action="" name="myform">
+     Enter URL for Company List XMLfile<br><br>
+    <input type="text" name="xmlfile"><br><br>
+    <input type="submit" value="Submit Query" align="middle" onclick="popWindow(this.form)">
+</form>
+<noscript>
+</body>
+</html>

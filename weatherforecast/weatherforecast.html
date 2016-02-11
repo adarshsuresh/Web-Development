@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Weather Forecast</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="http://openlayers.org/en/v3.10.1/css/ol.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/api/theme/default/style.css">
+  <link rel="stylesheet" href="css/styles.css">
+  
+</head>
+<body>
+  <div class="container">
+  <div class="row text-center"><br><h1 style="font-weight:500;">Forecast Search</h1><br></div>
+  <div class="row serachdiv">
+    <form class="form-inline ">
+          <div class="form-group  col-md-3 ">    
+            <label class="text-muted">Street Address<span class="text-danger">*</span></label></br>
+            <input type="text" class="form-control" id="streetaddress" placeholder="Enter street address" required onkeyup="streetvalidate();">
+            <label id="streeterror" class="text-danger"></label>
+          </div>
+          <div class=" form-group col-md-2 ">
+             <label class="text-muted">City<span class="text-danger">*</span></label></br>
+             <input type="text" class="form-control" id="city" placeholder="Enter the city name" required onkeyup="cityvalidate();">
+             <label id="cityerror" class="text-danger"></label>
+          </div> 
+          <div class="form-group col-md-2 ">
+             <label class="text-muted" >State<span class="text-danger">*</span></label></br>
+             <select name="state" class="form-control" id="state" required onchange="statevalidate();">
+              <option value="NIL" selected >Select your state..</option>
+              <option value="AL" >Alabama</option>
+              <option value="AK" >Alaska</option>
+              <option value="AZ" >Arizona</option>
+              <option value="AR" >Arkansas</option>
+              <option value="CA" >California</option>
+              <option value="CO" >Colorado</option>
+              <option value="CT" >Connecticut</option>
+              <option value="DE" >Delaware</option>
+              <option value="DC" >District Of Columbia</option>
+              <option value="FL" >Florida</option>
+              <option value="GA" >Georgia</option>
+              <option value="HI" >Hawaii</option>
+              <option value="ID" >Idaho</option>
+              <option value="IL" >Illinois</option>
+              <option value="IN" >Indiana</option>
+              <option value="IA" >Iowa</option>
+              <option value="KS" >Kansas</option>
+              <option value="KY" >Kentucky</option>
+              <option value="LA" >Louisiana</option>
+              <option value="ME" >Maine</option>
+              <option value="MD" >Maryland</option>
+              <option value="MA" >Massachusetts</option>
+              <option value="MI" >Michigan</option>
+              <option value="MN" >Minnesota</option>
+              <option value="MS" >Mississippi</option>
+              <option value="MO" >Missouri</option>
+              <option value="MT" >Montana</option>
+              <option value="NE" >Nebraska</option>
+              <option value="NV" >Nevada</option>
+              <option value="NH" >New Hampshire</option>
+              <option value="NJ" >New Jersey</option>
+              <option value="NM" >New Mexico</option>
+              <option value="NY" >New York</option>
+              <option value="NC" >North Carolina</option>
+              <option value="ND" >North Dakota</option>
+              <option value="OH" >Ohio</option>
+              <option value="OK" >Oklahoma</option>
+              <option value="OR" >Oregon</option>
+              <option value="PA" >Pennsylvania</option>
+              <option value="RI" >Rhode Island</option>
+              <option value="SC" >South Carolina</option>
+              <option value="SD" >South Dakota</option>
+              <option value="TN" >Tennessee</option>
+              <option value="TX" >Texas</option>
+              <option value="UT" >Utah</option>
+              <option value="VT" >Vermont</option>
+              <option value="VA" >Virginia</option>
+              <option value="WA" >Washington</option>
+              <option value="WV">West Virginia</option>
+              <option value="WI" >Wisconsin</option>
+              <option value="WY" >Wyoming</option>
+              </select>
+              <label id="stateerror" class="text-danger"></label>
+          </div> 
+          <div class="form-group col-md-3 ">
+            <label class="text-muted">Degree<span class="text-danger">*</span></label></br>
+            <label class="text-muted"><input checked type="radio" name="degree" value="us" >Fahrenheit </label>
+            <label class="text-muted"><input type="radio" name="degree" value="si">Celsius </label>
+          </div>
+          <div class="pull-right" style="padding-right:2px">
+          <br>
+           <button type="reset" class="btn btn-default pull-right btn-md glyphicon glyphicon-refresh"  onclick="cleardata();"> Clear</button>
+           <button type="button" class="btn btn-primary pull-right btn-md glyphicon glyphicon-search " onclick="completevalidate();"> Search</button>
+           <br>
+           <label size="10" class="text-muted" >Powered by:</label>
+           <a href="http://forecast.io" ><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io" title="Forecast.io" display="inline" width="90px" height="60px" ></a>
+           <br>
+          </div>      
+    </form>
+  </div>
+  <div class="row">
+    <hr>
+  </div>
+  <div id="demo" class="row">
+      <ul class="nav nav-pills" role="tablist">
+          <li role="presentation" class="active btn-default"><a href="#rightnow" aria-controls="rightnow" role="tab" data-toggle="tab">Right Now</a></li>
+          <li role="presentation" class="btn-default"><a href="#next24" aria-controls="next24" role="tab" data-toggle="tab">Next 24 Hours</a></li>
+          <li role="presentation" class="btn-default"><a href="#next7" aria-controls="next7" role="tab" data-toggle="tab">Next 7 Days</a></li>
+      </ul>
+      <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="rightnow">
+          <div id="rightnowinfo" class="col-md-6">
+            </div>
+           <div id="rightnowmap" class="col-md-6">
+                <div id="mymap" >
+                </div>
+            </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="next24">
+       <table id="next24table" class="table"></table>
+      </div>
+      <div role="tabpanel" class="tab-pane col-md-12 fade" id="next7" >
+      </div>     
+  </div>
+  </div>
+  <script type="text/javascript">
+  document.getElementById("demo").style.visibility = 'hidden';
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="http://openlayers.org/api/OpenLayers.js"></script>
+  <script src="http://openlayers.org/en/v3.10.1/build/ol.js"></script>
+  <script src="http://connect.facebook.net/en_US/all.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>

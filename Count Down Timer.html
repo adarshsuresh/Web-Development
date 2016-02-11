@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<title>
+Perfect Timing
+</title>
+<body>
+<h1 align="center" style="margin-top:100px">Perfect Timing</h1>
+<div style="width: 50%;margin: 0 auto; padding: 10px;border: 5px solid gray;">Input Seconds: <input type="text" id="countTarget"><br>
+<fieldset>
+    <legend>Count Up Timer:</legend><h1 id="countUp">00 Days, 00 Hours, 00 Minutes, 00 Seconds.</h1><button type="button" onclick="countU();">Start/Pause</button><button type="button" onclick="resetU();">Reset</button>
+    </fieldset>
+ <fieldset>
+    <legend>Count Down Timer:</legend>
+<h1 id="countDown">00 Days, 00 Hours, 00 Minutes, 00 Seconds.</h1><button type="button" onclick="countD();">Start/Pause</button><button type="button" onclick="resetD();">Reset</button>
+ </fieldset>
+</div>
+</body>
+</html>
+
+<script language="JavaScript">
+CountdownActive = false;
+CountdownStepper = -1;
+Countdownsec=0;
+Countdowncheck=false;
+CountupActive = false;
+CountupStepper = 1;
+Countupsec=0;
+Countupmax=0;
+DisplayFormat = "%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds.";	
+SetTimeOutPeriod = 980;
+LeadingZero = true;
+function calcage(secs, num1, num2) {
+  s = ((Math.floor(secs/num1))%num2).toString();
+  if (LeadingZero && s.length < 2)
+    s = "0" + s;
+  return "<b>" + s + "</b>";
+}
+
+function CountBack(secs) {
+  if (secs < 0 || !CountdownActive) {
+  	if(secs<0)
+  		document.getElementById("countDown").style.color = "red";
+  	CountdownActive = false;
+    return;
+  }
+  Countdownsec=secs;
+  DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs,86400,100000));
+  DisplayStr = DisplayStr.replace(/%%H%%/g, calcage(secs,3600,24));
+  DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs,60,60));
+  DisplayStr = DisplayStr.replace(/%%S%%/g, calcage(secs,1,60));
+
+  document.getElementById("countDown").innerHTML = DisplayStr;
+  if (CountdownActive)
+    setTimeout("CountBack(" + (secs+CountdownStepper) + ")", SetTimeOutPeriod);
+	
+}
+function CountFront(secs,maxval) {
+  if (secs > maxval || !CountupActive) {
+  	if(secs>maxval)
+  		document.getElementById("countUp").style.color = "red";
+  	CountupActive = false;
+    return;
+  }
+  DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs,86400,100000));
+  DisplayStr = DisplayStr.replace(/%%H%%/g, calcage(secs,3600,24));
+  DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs,60,60));
+  DisplayStr = DisplayStr.replace(/%%S%%/g, calcage(secs,1,60));
+  document.getElementById("countUp").innerHTML = DisplayStr;
+  Countupsec=secs;
+  if (CountupActive)
+    setTimeout("CountFront(" + (secs+CountupStepper) + ","+maxval+")", SetTimeOutPeriod);
+}
+function countD()
+{
+
+	if(CountdownActive==false)
+	{
+		CountdownActive=true;
+		if(Countdownsec==0 && Countdowncheck==false)
+		{
+			var numValue=0;
+			var secs=document.getElementById("countTarget");
+			if (secs.value != "" && !isNaN(secs.value))
+   			{ 
+   				Countdowncheck=true;
+   				numValue = parseFloat(secs.value);
+				CountBack(numValue);
+			}
+			else
+				alert("Input a value in seconds!")
+		}
+		else
+			CountBack(Countdownsec);
+
+	}
+	else
+	{
+		CountdownActive=false;
+	}
+}
+function countU()
+{
+	if(CountupActive==false)
+	{
+		CountupActive=true;
+		if(Countupsec==0)
+		{
+			var numValue=0;
+			var secs=document.getElementById("countTarget");
+			if (secs.value != "" && !isNaN(secs.value))
+   			{ 
+   				numValue = parseFloat(secs.value);
+   				Countupmax=numValue;
+				CountFront(1,Countupmax);
+			}
+			else
+				alert("Input a value in seconds!")
+		}
+		else
+			CountFront(Countupsec,Countupmax);
+
+	}
+	else
+	{
+		CountupActive=false;
+	}
+}
+function resetU()
+{
+	CountupActive = false;
+	Countupsec=0;
+	document.getElementById("countUp").innerHTML = "00 Days, 00 Hours, 00 Minutes, 00 Seconds.";
+	document.getElementById("countUp").style.color = "black";
+	secs=document.getElementById("countTarget");
+	secs.value="";
+}
+function resetD()
+{
+	CountdownActive = false;
+	Countdowncheck=false;
+	Countdownsec=0;
+	document.getElementById("countDown").innerHTML = "00 Days, 00 Hours, 00 Minutes, 00 Seconds.";
+	document.getElementById("countDown").style.color = "black";
+	secs=document.getElementById("countTarget");
+	secs.value="";
+}
+</script>
